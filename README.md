@@ -2,5 +2,7 @@ Simple program for reposting social media posts to Telegram chats. Currently jus
 
 Usage:
 
-$ npm install
+```
+$ npm install  
 $ node main.js <INSTAGRAM USERNAME> <TELEGRAM CHAT ID>
+```
