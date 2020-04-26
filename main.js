@@ -70,8 +70,8 @@ const getTwitterUpdates = () => {
 }
 
 
-const getInstagramUpdates = (instagramUserName) => {
-  ig.scrapeUserPage(instagramUserName)
+const getInstagramUpdates = (username = instagramUserName) => {
+  ig.scrapeUserPage(username)
   .then(
     result => {
       result.medias.forEach(item => {
@@ -95,7 +95,7 @@ const reposter = () => {
   
   getPreviousInstagramPosts()
   .then(() => getPreviousTwitterPosts())
-  .then(setInterval( getUpdates, 5000))
+  .then(setInterval( getUpdates, 30000))
 }
 
 reposter()
