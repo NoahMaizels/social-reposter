@@ -1,16 +1,29 @@
 const TelegramBot = require('node-telegram-bot-api');
-const config = require('config')
+const argv = require('yargs').argv
+
+// const config = require('config')
 const ig = require('instagram-scraping')
 const twitter = require('scrape-twitter')
 
-const token = config.get('TOKEN')
+// const token = config.get('TOKEN')
+const token = argv.token
+const chatId = argv.chat
+const twitterUserName = argv.twitter
+const instagramUserName = argv.instagram
+
 const bot = new TelegramBot(token, {polling: true});
-const chatId = process.argv[2]
-const twitterUserName = process.argv[3]
-const instagramUserName = process.argv[4]
 
 const twitterPosts = []
 const instagramPosts = []
+
+
+
+
+console.log(token)
+console.log(chatId)
+console.log(twitterUserName)
+console.log(instagramUserName)
+console.log(argv)
 
 
 bot.on('message', (msg) => {
@@ -25,7 +38,11 @@ const getPreviousInstagramPosts = async (username = instagramUserName) => {
         instagramPosts.push(item.shortcode)
       }) 
     }
-  )
+  ).then(
+    () => {console.log("Instagram posts loaded")}
+  ).catch(err => {
+    console.log(err)
+  })
 }
 
 const getPreviousTwitterPosts = async () => {
@@ -53,8 +70,8 @@ const getTwitterUpdates = () => {
 }
 
 
-const getInstagramUpdates = (userName) => {
-  ig.scrapeUserPage('rhotic')
+const getInstagramUpdates = (instagramUserName) => {
+  ig.scrapeUserPage(instagramUserName)
   .then(
     result => {
       result.medias.forEach(item => {
@@ -64,7 +81,9 @@ const getInstagramUpdates = (userName) => {
         }
       })      
     }
-  )
+  ).catch(err => {
+    console.log(err)
+  })
 }
 
 const getUpdates = () => {
@@ -72,6 +91,11 @@ const getUpdates = () => {
    getInstagramUpdates()
 }
 
-getPreviousInstagramPosts()
-.then(() => getPreviousTwitterPosts())
-.then(setInterval( getUpdates, 5000))
+const reposter = () => {
+  
+  getPreviousInstagramPosts()
+  .then(() => getPreviousTwitterPosts())
+  .then(setInterval( getUpdates, 5000))
+}
+
+reposter()
