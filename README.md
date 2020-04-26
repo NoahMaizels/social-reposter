@@ -8,5 +8,5 @@ Usage:
 
 ```
 $ npm install  
-$ node main.js <TELEGRAM CHAT_ID> <TWITTER USERNAME> <INSTAGRAM USERNAME> 
+$ node main.js --BOT_TOKEN --CHAT_ID --TWITTER_USERNAME --INSTAGRAM_USERNAME
 ```
