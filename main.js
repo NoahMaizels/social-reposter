@@ -1,53 +1,80 @@
 const TelegramBot = require('node-telegram-bot-api');
 const config = require('config')
-const fs = require('fs')
 const ig = require('instagram-scraping')
+const twitter = require('scrape-twitter')
 
 const token = config.get('TOKEN')
 const bot = new TelegramBot(token, {polling: true});
-const userName = process.argv[2]
-const chatId = process.argv[3]
+const chatId = process.argv[2]
+const twitterUserName = process.argv[3]
+const instagramUserName = process.argv[4]
 
-console.log(process.argv)
-let posts = []
+
+
+const twitterPosts = []
+const instagramPosts = []
+
+
 
 bot.on('message', (msg) => {
   console.log(msg)
 });
 
-const getPreviousPosts = (username = userName) => {
+const getPreviousInstagramPosts = async (username = instagramUserName) => {
   ig.scrapeUserPage(username)
   .then(
-    result => {
+     result => {
       result.medias.forEach(item => {
-        posts.push(item.shortcode)
-      })
-      let json = JSON.stringify(posts); //convert it back to json
-      fs.writeFile('posts.json', json, 'utf8', (err) => {
-      if (err) throw err
-        console.log('Previous posts saved to file!')
-      });  
+        instagramPosts.push(item.shortcode)
+      }) 
     }
   )
 }
 
-const getUpdates = (userName) => {
+const getPreviousTwitterPosts = async () => {
+  timeline = new twitter.TimelineStream(twitterUserName, {retweets: true})
+  timeline
+  .on('data', data  => {
+    twitterPosts.push(data.id)
+  })
+  .on('end', () => {
+    console.log('Twitter posts loaded')
+    return twitterPosts
+  }) 
+}
+
+const getTwitterUpdates = () => {
+  timeline = new twitter.TimelineStream('noahniuwa', {retweets: true})
+  timeline
+  .on('data', data  => {
+    if (!twitterPosts.includes(data.id)) {
+      console.log('new post')
+      twitterPosts.push(data.id)
+      bot.sendMessage(chatId, `https://twitter.com/${twitterUserName}/status/${data.id}`)
+    }
+  })
+}
+
+
+const getInstagramUpdates = (userName) => {
   ig.scrapeUserPage('rhotic')
   .then(
     result => {
       result.medias.forEach(item => {
-        if (!posts.includes(item.shortcode)){
-          posts.push(item.shortcode)
+        if (!instagramPosts.includes(item.shortcode)){
+          instagramPosts.push(item.shortcode)
           bot.sendMessage(chatId, `https://www.instagram.com/p/${item.shortcode}`); 
         }
-      })
-      let json = JSON.stringify(posts); //convert it back to json
-      fs.writeFile('posts.json', json, 'utf8', (err) => {
-      if (err) throw err
-      });  
+      })      
     }
   )
 }
 
-getPreviousPosts()
-setInterval( getUpdates, 3000)
+const getUpdates = () => {
+   getTwitterUpdates()
+   getInstagramUpdates()
+}
+
+getPreviousInstagramPosts()
+.then(() => getPreviousTwitterPosts())
+.then(setInterval( getUpdates, 5000))
