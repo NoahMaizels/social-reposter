@@ -9,11 +9,8 @@ const chatId = process.argv[2]
 const twitterUserName = process.argv[3]
 const instagramUserName = process.argv[4]
 
-
-
 const twitterPosts = []
 const instagramPosts = []
-
 
 
 bot.on('message', (msg) => {
