@@ -1,4 +1,4 @@
-// require('dotenv').config()
+// require('dotenv').config() // For local dev
 const TelegramBot = require('node-telegram-bot-api')
 const Twitter = require('twitter')
 const express = require('express')
@@ -6,33 +6,9 @@ const rateLimit = require("express-rate-limit")
 const PORT = process.env.PORT || 3000
 
 
-const BOT_TOKEN = process.env.BOT_TOKEN
-const TWITTER_ACCOUNTS = process.env.TWITTER_ACCOUNTS
-const TARGET_CHATS = process.env.TARGET_CHATS
-const CONSUMER_KEY = process.env.CONSUMER_KEY
-const CONSUMER_SECRET = process.env.CONSUMER_SECRET
-const FREQUENCY = process.env.FREQUENCY
-const TOKEN_SECRET = process.env.TOKEN_SECRET
-const TOKEN_KEY = process.env.TOKEN_KEY
-
-const env_vars = {
-  BOT_TOKEN,
-  TWITTER_ACCOUNTS,
-  TARGET_CHATS,
-  CONSUMER_KEY,
-  CONSUMER_SECRET,
-  FREQUENCY,
-  TOKEN_SECRET,
-  TOKEN_KEY
-}
-
-Object.keys(env_vars).forEach(key => {
-  console.log(`${key}: ${env_vars[key]}`)
-})
-
 // The Express part is just so that it can be pinged to keep the Heroku dynos from idling
 const app = express()
-
+app.use(morgan('dev'))
 // Limit request rate
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
