@@ -16,10 +16,10 @@ const limiter = rateLimit({
   max: 30 // limit each IP to 100 requests per windowMs
 })
 app.use(limiter);
+
 app.use((req, res) => {
   res.send('PING')
 })
-
 app.listen(PORT)
 console.log(`App listening on ${PORT}`)
 
@@ -82,10 +82,13 @@ const getNewTweets = async () => {
 
 const bot = new TelegramBot(token, {polling: true});
 
-bot.on('message', (msg) => {
-  console.log(msg)
-});
+// Turn off when using webhooks
+// bot.on('message', (msg) => {
+//   console.log(msg)
+// });
 
+telegramBot.openWebHook()
+console.log(`hasOpenWebHook?: ${bot.hasOpenWebHook()}`)
 
 getPastTweets()
   .then(() =>{
