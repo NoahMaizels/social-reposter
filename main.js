@@ -4,11 +4,15 @@ const Twitter = require('twitter')
 const morgan = require('morgan')
 const express = require('express')
 const rateLimit = require("express-rate-limit")
+const bodyParser = require('body-parser')
+
 const PORT = process.env.PORT || 3000
 
 
 // The Express part is just so that it can be pinged to keep the Heroku dynos from idling
 const app = express()
+
+app.use(bodyParser())
 app.use(morgan('dev'))
 // Limit request rate
 const limiter = rateLimit({
@@ -18,6 +22,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use((req, res) => {
+  console.log(req.body)
   res.send('PING')
 })
 app.listen(PORT)
