@@ -80,7 +80,7 @@ const getNewTweets = async () => {
 }
  
 
-const bot = new TelegramBot(token, {polling: true});
+const bot = new TelegramBot(token);
 
 // Turn off when using webhooks
 // bot.on('message', (msg) => {
