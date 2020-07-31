@@ -25,9 +25,7 @@ const token = process.env.BOT_TOKEN
 const chatIds = process.env.TARGET_CHATS.split(',') // Takes list of comma separated values
 const twitterAccounts = process.env.TWITTER_ACCOUNTS.split(',') // Takes list of comma separated values
 const frequency = process.env.FREQUENCY
-console.log(token)
-console.log(chatIds)
-console.log(twitterAccounts)
+console.log(process.env)
 const past_tweets = {}
 twitterAccounts.forEach(account => past_tweets[account] = [])
 
