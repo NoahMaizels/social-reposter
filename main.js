@@ -1,4 +1,4 @@
-require('dotenv').config()
+// require('dotenv').config()
 const TelegramBot = require('node-telegram-bot-api')
 const Twitter = require('twitter')
 const express = require('express')
