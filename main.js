@@ -1,101 +1,89 @@
-const TelegramBot = require('node-telegram-bot-api');
-const argv = require('yargs').argv
+require('dotenv').config()
+const TelegramBot = require('node-telegram-bot-api')
+const Twitter = require('twitter')
+const express = require('express')
+const rateLimit = require("express-rate-limit")
+const PORT = process.env.PORT || 3000
 
-// const config = require('config')
-const ig = require('instagram-scraping')
-const twitter = require('scrape-twitter')
+// The Express part is just so that it can be pinged to keep the Heroku dynos from idling
+const app = express()
 
-// const token = config.get('TOKEN')
-const token = argv.token
-const chatId = argv.chat
-const twitterUserName = argv.twitter
-const instagramUserName = argv.instagram
+// Limit request rate
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 30 // limit each IP to 100 requests per windowMs
+})
+app.use(limiter);
+app.use((req, res) => {
+  res.send('PING')
+})
+app.listen(PORT)
+
+// Main app below:
+
+const token = process.env.BOT_TOKEN
+const chatIds = process.env.TARGET_CHATS.split(',') // Takes list of comma separated values
+const twitterAccounts = process.env.TWITTER_ACCOUNTS.split(',') // Takes list of comma separated values
+const frequency = process.env.FREQUENCY
+
+const past_tweets = {}
+twitterAccounts.forEach(account => past_tweets[account] = [])
+
+const client = new Twitter({
+  consumer_key: process.env.CONSUMER_KEY,
+  consumer_secret: process.env.CONSUMER_SECRET,
+  access_token_key: process.env.TOKEN_KEY,
+  access_token_secret: process.env.TOKEN_SECRET
+});
+ 
+const buildTweetLink = (username, tweet_id) => {
+  return `https://twitter.com/${username}/status/${tweet_id}`
+}
+
+
+const getPastTweets = async () => {
+  twitterAccounts.forEach(account => {
+    const params = {screen_name: account};
+    client.get('statuses/user_timeline', params, (error, tweets, response) => {
+      if (!error) {
+        tweets.forEach(tweet => {
+          past_tweets[account].push(tweet.id_str)
+        })
+      }
+      console.log(`${account} has ${past_tweets[account].length} recent past tweets.`)
+    })
+  })
+}
+
+const getNewTweets = async () => {
+  twitterAccounts.forEach(account => {
+    const params = {screen_name: account};
+    client.get('statuses/user_timeline', params, (error, tweets, response) => {
+      if (!error) {
+        tweets.forEach(tweet => {
+          if (!past_tweets[account].includes(tweet.id_str)) {
+            const tweet_url = buildTweetLink(account, tweet.id_str)
+            chatIds.forEach(chatId => {
+              bot.sendMessage(chatId, tweet_url); 
+            })
+            console.log(`New TWEET! ${tweet.id_str}`)
+            past_tweets[account].push(tweet.id_str)
+          }
+        })
+      }
+    })
+  })
+}
+ 
 
 const bot = new TelegramBot(token, {polling: true});
-
-const twitterPosts = []
-const instagramPosts = []
-
-
-
-
-console.log(token)
-console.log(chatId)
-console.log(twitterUserName)
-console.log(instagramUserName)
-console.log(argv)
-
 
 bot.on('message', (msg) => {
   console.log(msg)
 });
 
-const getPreviousInstagramPosts = async (username = instagramUserName) => {
-  ig.scrapeUserPage(username)
-  .then(
-     result => {
-      result.medias.forEach(item => {
-        instagramPosts.push(item.shortcode)
-      }) 
-    }
-  ).then(
-    () => {console.log("Instagram posts loaded")}
-  ).catch(err => {
-    console.log(err)
+
+getPastTweets()
+  .then(() =>{
+    setInterval(getNewTweets, frequency)
   })
-}
-
-const getPreviousTwitterPosts = async () => {
-  timeline = new twitter.TimelineStream(twitterUserName, {retweets: true})
-  timeline
-  .on('data', data  => {
-    twitterPosts.push(data.id)
-  })
-  .on('end', () => {
-    console.log('Twitter posts loaded')
-    return twitterPosts
-  }) 
-}
-
-const getTwitterUpdates = () => {
-  timeline = new twitter.TimelineStream('noahniuwa', {retweets: true})
-  timeline
-  .on('data', data  => {
-    if (!twitterPosts.includes(data.id)) {
-      console.log('new post')
-      twitterPosts.push(data.id)
-      bot.sendMessage(chatId, `https://twitter.com/${twitterUserName}/status/${data.id}`)
-    }
-  })
-}
-
-
-const getInstagramUpdates = (username = instagramUserName) => {
-  ig.scrapeUserPage(username)
-  .then(
-    result => {
-      result.medias.forEach(item => {
-        if (!instagramPosts.includes(item.shortcode)){
-          instagramPosts.push(item.shortcode)
-          bot.sendMessage(chatId, `https://www.instagram.com/p/${item.shortcode}`); 
-        }
-      })      
-    }
-  ).catch(err => {
-    console.log(err)
-  })
-}
-
-const getUpdates = () => {
-   getTwitterUpdates()
-   getInstagramUpdates()
-}
-
-const reposter = () => {
-  
-  getPreviousInstagramPosts()
-  .then(() => getPreviousTwitterPosts())
-  .then(setInterval( getUpdates, 30000))
-}
-
-reposter()

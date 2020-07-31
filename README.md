@@ -1,12 +1,39 @@
-Simple program for reposting Instagram and Twitter posts to Telegram chats. You to set up your own Telegram bot, add it to a Telegram chat and get the chat_id. Also need to add your Telegram bot's token in a config folder inside a default.json file in this format:
+Simple program for reposting Twitter posts to Telegram chats. You to set up your own Telegram bot, add it to a Telegram chat and get the chat_id. Add all necessary env variables in a .env file or otherwise. It gets all recent (the last 20) tweets and saves in local memory. 
 
-{
-  "TOKEN":"Your bot's token"
-}
+# Environment variables
 
-Usage:
+Twitter accounts and target chats can be input as comma separated values
+
+## Telegram bot variables
+
+```
+BOT_TOKEN= 
+TWITTER_ACCOUNTS=account1,account2
+TARGET_CHATS=chatid1,chatid2
+```
+
+## Twitter API variables
+
+```
+CONSUMER_KEY= 
+CONSUMER_SECRET= 
+TOKEN_KEY= 
+TOKEN_SECRET= 
+```
+
+## Other variable
+How often to check Twitter in milliseconds (5000 = 5 seconds).
+
+```
+FREQUENCY=
+```
+
+
+# Usage:
+
+Add .env file or set env variables through other means and run scripts below:
 
 ```
 $ npm install  
-$ node main.js --BOT_TOKEN --CHAT_ID --TWITTER_USERNAME --INSTAGRAM_USERNAME
+$ npm start
 ```
