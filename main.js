@@ -87,7 +87,7 @@ const bot = new TelegramBot(token, {polling: true});
 //   console.log(msg)
 // });
 
-telegramBot.openWebHook()
+bot.openWebHook()
 console.log(`hasOpenWebHook?: ${bot.hasOpenWebHook()}`)
 
 getPastTweets()
