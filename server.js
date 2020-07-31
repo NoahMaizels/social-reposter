@@ -16,8 +16,8 @@ app.use(morgan('dev'))
 app.use(limiter);
 
 app.use((req, res) => {
-  console.log(`BODY:${req.body.json()}`)
-  console.log(JSON.parse(req.body))
+  console.log('BODY')
+  console.log(req.body)
   res.send('PING')
 })
 
