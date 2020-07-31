@@ -21,13 +21,21 @@ TOKEN_KEY=
 TOKEN_SECRET= 
 ```
 
-## Other variable
-How often to check Twitter in milliseconds (5000 = 5 seconds).
+## Other variables
 
 ```
 FREQUENCY=
 ```
+*How often to check Twitter in milliseconds (5000 = 5 seconds).*
 
+```
+WEBHOOKS= 
+```
+*1 if you want to use WebHooks and supply your URL, 0 for polling*
+```
+WEBHOOK_URL
+```
+*Your WebHook URL*
 
 # Usage:
 
