@@ -19,7 +19,9 @@ app.use(limiter);
 app.use((req, res) => {
   res.send('PING')
 })
+
 app.listen(PORT)
+console.log(`App listening on ${PORT}`)
 
 // Main app below:
 
