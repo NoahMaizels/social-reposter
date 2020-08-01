@@ -1,4 +1,5 @@
 const Twitter = require('twitter')
+const forwardingIds = process.env.FORWARDING_IDS.split(',')
 const twitterAccounts = process.env.TWITTER_ACCOUNTS.split(',') // Takes list of comma separated values
 const past_tweets = {}
 twitterAccounts.forEach(account => past_tweets[account] = [])
@@ -43,7 +44,12 @@ const getNewTweets = (chatIds, bot) => {
             chatIds.forEach(chatId => {
               // Add filter here to stop tweets from certain Twitter accounts going to certain chatIds
               try {
-                bot.sendMessage(chatId, tweet_url); 
+                bot.sendMessage(chatId, tweet_url)
+                  .then(res => {
+                    forwardingIds.forEach(forwardId => {
+                      bot.forwardMessage(forwardId, chatId, res.message_id)
+                    })
+                  }) 
               }
               catch (err) {
                 console.log("TELEGRAM ERROR:")
