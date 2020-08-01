@@ -20,7 +20,6 @@ app.use(morgan('dev'))
 app.post('/', forwarding)
 
 app.use((req, res) => {
-  // Forward all messages sent by others to TARGET_CHATS to FORWARDING_IDS
   console.log('BODY')
   console.log(req.body)
   res.send('PING')
