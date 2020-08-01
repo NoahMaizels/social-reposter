@@ -9,15 +9,15 @@ const app = express()
 
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
-  max: 30 // limit each IP to 100 requests per windowMs
+  max: 100 // limit each IP to 30 requests per windowMs
 })
 
 // Middleware
 app.use(bodyParser())
 app.use(morgan('dev'))
-app.use(limiter);
+// app.use(limiter);
 
-app.use((req, res) => {
+app.post((req, res) => {
   if (req.body.channel_post){
     const channel_id = req.body.channel_post.chat.id
     const message_id = req.body.channel_post.message_id
