@@ -1,4 +1,10 @@
-Simple program for reposting Twitter posts to a list of Telegram target chats, and optionally forwarding from those target chats to a second list target chats (for example, sending first to several announcement channels, and then forwarding to several group chats). To set up your own Telegram bot, add it to a Telegram chat and get the chat_id. Add all necessary env variables in a .env file or otherwise. It gets all recent (the last 20) tweets and saves in local memory. 
+Simple program for reposting Twitter posts to a list of Telegram target channels `TARGET_CHATS` (not group chats, channels), and optionally forwarding from those target channels to a second list target group chats `FORWARDING_IDS` (for example, sending first to several announcement channels, and then forwarding to several group chats).
+
+All messages posted by others in `TARGET_CHATS` will ALSO be forwarded to all `FORWARDING_IDS` chats.
+
+If you would like for the bot to forward messages from a channel, but not send Twitter updates from that channel, add that channel to the `FORWARDING_ONLY` env variable of comma separated values.
+
+To set up your own Telegram bot, add it to a Telegram chat and get the chat_id. Add all necessary env variables in a .env file or otherwise. It gets all recent (the last 20) tweets and saves in local memory. 
 
 # Environment variables
 
@@ -9,7 +15,6 @@ Twitter accounts and target chats can be input as comma separated values
 ```
 BOT_TOKEN= 
 TWITTER_ACCOUNTS=account1,account2
-TARGET_CHATS=chatid1,chatid2
 ```
 
 ## Twitter API variables
@@ -21,7 +26,7 @@ TOKEN_KEY=
 TOKEN_SECRET= 
 ```
 
-## Other variables
+## variables
 
 ```
 FREQUENCY=
@@ -38,9 +43,19 @@ WEBHOOK_URL
 *Your WebHook URL*
 
 ```
+TARGET_CHATS=chatid1,chatid2
+```
+A comma separated list of chats to send Twitter updates to. All messages posted in `TARGET_CHATS` will also be sent to all chats in `FORWARDING_IDS`, unless those `TARGET_CHATS` ids have been added to `FORWARDING_ONLY`. 
+
+```
 FORWARDING_IDS
 ```
 *Chat ids to forward sent messages to*
+
+```
+FORWARDING_ONLY
+```
+*Channel ids you want to forward messages from but not send Twitter updates to*
 
 # Usage:
 

@@ -52,7 +52,13 @@ const getNewTweets = (chatIds, bot) => {
                     .then(res => {
                       forwardingIds.forEach(forwardId => {
                         // Forward all self sent messages sent to TARGET_CHATS to all FORWARDING_IDS
-                        bot.forwardMessage(forwardId, chatId, res.message_id)
+                        try {
+                          bot.forwardMessage(forwardId, chatId, res.message_id)
+                        }
+                        catch(err) {
+                          console.log("TELEGRAM ERROR:")
+                          console.log(err)
+                        }
                       })
                     }) 
                 }
