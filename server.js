@@ -17,7 +17,7 @@ app.use(bodyParser())
 app.use(morgan('dev'))
 // app.use(limiter);
 
-app.post('/', (req, res) => {
+app.post('/', (req, res, next) => {
   console.log(`Post? ${req.body.channel_post}`)
   if (req.body.channel_post){
     const channel_id = req.body.channel_post.chat.id
@@ -38,9 +38,8 @@ app.post('/', (req, res) => {
           console.log(err)
         } 
       }) 
-    return res.send('OK!') 
   }
-  res.send('Did not forward')
+  next()
 })
 
 app.use((req, res) => {
