@@ -35,10 +35,19 @@ const getNewTweets = (chatIds, bot) => {
     client.get('statuses/user_timeline', params, (error, tweets, response) => {
       if (!error) {
         tweets.forEach(tweet => {
+          // If the current account's tweets don't have the new tweet id
           if (!past_tweets[account].includes(tweet.id_str)) {
             const tweet_url = buildTweetLink(account, tweet.id_str)
+
+            // Send new Tweets to chats
             chatIds.forEach(chatId => {
-              bot.sendMessage(chatId, tweet_url); 
+              // Add filter here to stop tweets from certain Twitter accounts going to certain chatIds
+              try {
+                bot.sendMessage(chatId, tweet_url); 
+              }
+              catch (err) {
+                console.log(err)
+              }
             })
             console.log(`New TWEET! ${tweet.id_str}`)
             past_tweets[account].push(tweet.id_str)
