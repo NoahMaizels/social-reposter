@@ -1,5 +1,6 @@
 const Twitter = require('twitter')
 const forwardingIds = process.env.FORWARDING_IDS.split(',')
+const forwardingOnlyIds = process.env.FORWARDING_ONLY.split(',')
 const twitterAccounts = process.env.TWITTER_ACCOUNTS.split(',') // Takes list of comma separated values
 const past_tweets = {}
 twitterAccounts.forEach(account => past_tweets[account] = [])
@@ -40,21 +41,26 @@ const getNewTweets = (chatIds, bot) => {
           if (!past_tweets[account].includes(tweet.id_str)) {
             const tweet_url = buildTweetLink(account, tweet.id_str)
 
-            // Send new Tweets to chats
+            // Send all new Tweets to all TARGET_CHATS
             chatIds.forEach(chatId => {
-              // Add filter here to stop tweets from certain Twitter accounts going to certain chatIds
-              try {
-                bot.sendMessage(chatId, tweet_url)
-                  .then(res => {
-                    forwardingIds.forEach(forwardId => {
-                      bot.forwardMessage(forwardId, chatId, res.message_id)
-                    })
-                  }) 
-              }
-              catch (err) {
-                console.log("TELEGRAM ERROR:")
-                console.log(err)
-              }
+              // Add filters here 
+
+              // Do not send messages to FORWARDING_ONLY channels
+              if (!forwardingOnlyIds.includes(chatId)) {
+                try {
+                  bot.sendMessage(chatId, tweet_url)
+                    .then(res => {
+                      forwardingIds.forEach(forwardId => {
+                        // Forward all self sent messages sent to TARGET_CHATS to all FORWARDING_IDS
+                        bot.forwardMessage(forwardId, chatId, res.message_id)
+                      })
+                    }) 
+                }
+                catch (err) {
+                  console.log("TELEGRAM ERROR:")
+                  console.log(err)
+                }
+              } 
             })
             console.log(`New TWEET! ${tweet.id_str}`)
             past_tweets[account].push(tweet.id_str)

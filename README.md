@@ -1,4 +1,4 @@
-Simple program for reposting Twitter posts to Telegram chats. You to set up your own Telegram bot, add it to a Telegram chat and get the chat_id. Add all necessary env variables in a .env file or otherwise. It gets all recent (the last 20) tweets and saves in local memory. 
+Simple program for reposting Twitter posts to a list of Telegram target chats, and optionally forwarding from those target chats to a second list target chats (for example, sending first to several announcement channels, and then forwarding to several group chats). To set up your own Telegram bot, add it to a Telegram chat and get the chat_id. Add all necessary env variables in a .env file or otherwise. It gets all recent (the last 20) tweets and saves in local memory. 
 
 # Environment variables
 
@@ -36,6 +36,11 @@ WEBHOOKS=
 WEBHOOK_URL
 ```
 *Your WebHook URL*
+
+```
+FORWARDING_IDS
+```
+*Chat ids to forward sent messages to*
 
 # Usage:
 
