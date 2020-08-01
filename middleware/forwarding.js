@@ -11,6 +11,7 @@ module.exports = (req, res, next) => {
   }
   console.log(req.body.channel_post)
   console.log(channel_id)
+  console.log(req.body.channel_post && repostIds.includes(channel_id))
   if (req.body.channel_post && repostIds.includes(channel_id)){
     // console.log(req.body)
     const message_id = req.body.channel_post.message_id
