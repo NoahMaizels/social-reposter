@@ -37,8 +37,10 @@ app.post('/', (req, res) => {
           console.log("TELEGRAM ERROR:")
           console.log(err)
         } 
-      })  
+      }) 
+    res.send('OK!') 
   }
+  res.send('Did not forward')
 })
 
 app.use((req, res) => {
