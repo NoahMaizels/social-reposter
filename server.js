@@ -22,6 +22,10 @@ app.post((req, res) => {
     const channel_id = req.body.channel_post.chat.id
     const message_id = req.body.channel_post.message_id
       forwardingIds.forEach(forwardId => {
+        console.log(forwardId)
+        console.log(channel_id)
+        console.log(message_id)
+
         // Forward all self sent messages sent to TARGET_CHATS to all FORWARDING_IDS
         try {
           bot.forwardMessage(forwardId, channel_id, message_id)
