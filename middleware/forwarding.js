@@ -1,5 +1,6 @@
 
 const targetChatIds = process.env.TARGET_CHAT_IDS.split(',')
+const bot = require('./getBot.js')
 
 module.exports = (req, res, next) => {
   if (req.body.channel_post){
