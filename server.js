@@ -38,7 +38,7 @@ app.post('/', (req, res) => {
           console.log(err)
         } 
       }) 
-    res.send('OK!') 
+    return res.send('OK!') 
   }
   res.send('Did not forward')
 })
