@@ -5,9 +5,10 @@ const repostIds = process.env.REPOST_IDS.split(',')
 const bot = require('../getBot.js')
 
 module.exports = (req, res, next) => {
-  const channel_id = req.body.channel_post.chat.id
-  const message_id = req.body.channel_post.message_id
+  
   if (req.body.channel_post && repostIds.includes(channel_id)){
+    const channel_id = req.body.channel_post.chat.id
+    const message_id = req.body.channel_post.message_id
     targetChatIds.forEach(chat_id => {
       // Forward all messages sent to channel where bot is admin to all TARGET_CHAT_IDS
       try {
