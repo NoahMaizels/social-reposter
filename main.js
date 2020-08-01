@@ -3,7 +3,7 @@ const { getNewTweets, getPastTweets } = require('./getTwitterInfo')
 const bot = require('./getBot.js')
 const app = require('./server')
 
-const chatIds = process.env.TARGET_CHATS.split(',') // Takes list of comma separated values
+const channelId = process.env.TARGET_CHANNEL // Takes list of comma separated values
 const frequency = process.env.FREQUENCY
 const PORT = process.env.PORT || 3000
 
@@ -12,5 +12,5 @@ console.log(`App listening on ${PORT}`)
 
 getPastTweets()
   .then(() => {
-    setInterval(()=>{getNewTweets(chatIds, bot)}, frequency)
+    setInterval(()=>{getNewTweets(channelId, bot)}, frequency)
   })

@@ -3,7 +3,7 @@ const express = require('express')
 const rateLimit = require("express-rate-limit")
 const bodyParser = require('body-parser')
 const bot = require('./getBot.js')
-const forwardingIds = process.env.FORWARDING_IDS.split(',')
+const forwarding = require('./middleware/forwarding')
 
 const app = express()
 
@@ -17,30 +17,7 @@ app.use(bodyParser())
 app.use(morgan('dev'))
 // app.use(limiter);
 
-app.post('/', (req, res, next) => {
-  console.log(`Post? ${req.body.channel_post}`)
-  if (req.body.channel_post){
-    const channel_id = req.body.channel_post.chat.id
-    const message_id = req.body.channel_post.message_id
-    console.log(channel_id)
-    console.log(message_id)
-      forwardingIds.forEach(forwardId => {
-        console.log(forwardId)
-        console.log(channel_id)
-        console.log(message_id)
-
-        // Forward all self sent messages sent to TARGET_CHATS to all FORWARDING_IDS
-        try {
-          bot.forwardMessage(forwardId, channel_id, message_id)
-        }
-        catch (err) {
-          console.log("TELEGRAM ERROR:")
-          console.log(err)
-        } 
-      }) 
-  }
-  next()
-})
+app.post('/', forwarding)
 
 app.use((req, res) => {
   // Forward all messages sent by others to TARGET_CHATS to FORWARDING_IDS
