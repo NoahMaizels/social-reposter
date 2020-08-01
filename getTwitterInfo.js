@@ -46,6 +46,7 @@ const getNewTweets = (chatIds, bot) => {
                 bot.sendMessage(chatId, tweet_url); 
               }
               catch (err) {
+                console.log("TELEGRAM ERROR:")
                 console.log(err)
               }
             })
