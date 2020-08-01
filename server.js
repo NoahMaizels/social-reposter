@@ -2,9 +2,7 @@ const morgan = require('morgan')
 const express = require('express')
 const rateLimit = require("express-rate-limit")
 const bodyParser = require('body-parser')
-const chatIds = process.env.TARGET_CHATS.split(',') // Takes list of comma separated values
-
-
+const forwardingIds = process.env.FORWARDING_IDS.split(',')
 
 const app = express()
 
