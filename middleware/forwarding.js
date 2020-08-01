@@ -6,7 +6,7 @@ const bot = require('../getBot.js')
 
 module.exports = (req, res, next) => {
   let channel_id 
-  if (req.body.channel_post.chat.id) {
+  if (req.body.channel_post) {
     channel_id = req.body.channel_post.chat.id
   }
   if (req.body.channel_post && repostIds.includes(channel_id)){
