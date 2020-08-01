@@ -2,6 +2,7 @@ const morgan = require('morgan')
 const express = require('express')
 const rateLimit = require("express-rate-limit")
 const bodyParser = require('body-parser')
+const bot = require('./getBot.js')
 const forwardingIds = process.env.FORWARDING_IDS.split(',')
 
 const app = express()
