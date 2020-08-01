@@ -51,7 +51,7 @@ const getNewTweets = (chatIds, bot) => {
                   bot.sendMessage(chatId, tweet_url)
                     .then(res => {
                       forwardingIds.forEach(forwardId => {
-                        // Forward all self sent messages sent to TARGET_CHATS to all FORWARDING_IDS
+                        // Forward all self sent messages (message_id) sent to TARGET_CHATS (chatId) to all FORWARDING_IDS (forwardId)
                         try {
                           bot.forwardMessage(forwardId, chatId, res.message_id)
                         }
