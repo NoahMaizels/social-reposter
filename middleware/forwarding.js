@@ -9,8 +9,10 @@ module.exports = (req, res, next) => {
   if (req.body.channel_post) {
     channel_id = req.body.channel_post.chat.id
   }
+  console.log(req.body.channel_post)
+  console.log(channel_id)
   if (req.body.channel_post && repostIds.includes(channel_id)){
-    console.log(req.body)
+    // console.log(req.body)
     const message_id = req.body.channel_post.message_id
     targetChatIds.forEach(chat_id => {
       // Forward all messages sent to channel where bot is admin to all TARGET_CHAT_IDS
