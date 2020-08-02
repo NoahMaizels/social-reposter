@@ -15,6 +15,11 @@ const buildTweetLink = (username, tweet_id) => {
   return `https://twitter.com/${username}/status/${tweet_id}`
 }
 
+const buildReTweetLink = (username, tweet_id) => {
+  let tweet = `https://twitter.com/${username}/status/${tweet_id}`
+  return tweet.replace(/(\r\n|\n|\r)/gm,"")
+}
+
 
 const getPastTweets = async () => {
   twitterAccounts.forEach(account => {
@@ -38,9 +43,14 @@ const getNewTweets = (channelId, bot) => {
         tweets.forEach(tweet => {
           // If past_tweets don't have the new tweet id, send
           if (!past_tweets[account].includes(tweet.id_str)) {
-            console.log(tweet)
-            const tweet_url = buildTweetLink(account, tweet.id_str)
-            console.log(tweet_url)
+            let tweet_url
+            if (!tweet.retweeted_status) {
+              tweet_url = buildTweetLink(account, tweet.id_str)
+            }
+            else {
+              tweet_url = buildReTweetLink(account, tweet.id_str)
+            }
+          
             // Send all new Tweets to TARGET_CHANNEL
               try {
                 bot.sendMessage(channelId, tweet_url)
