@@ -38,6 +38,7 @@ const getNewTweets = (channelId, bot) => {
         tweets.forEach(tweet => {
           // If past_tweets don't have the new tweet id, send
           if (!past_tweets[account].includes(tweet.id_str)) {
+            console.log(tweet)
             const tweet_url = buildTweetLink(account, tweet.id_str)
             // Send all new Tweets to TARGET_CHANNEL
               try {
