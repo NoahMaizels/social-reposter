@@ -1,8 +1,8 @@
-Simple program for reposting Twitter posts to a list of Telegram target channels `TARGET_CHATS` (not group chats, channels), and optionally forwarding from those target channels to a second list target group chats `FORWARDING_IDS` (for example, sending first to several announcement channels, and then forwarding to several group chats).
+Simple program for reposting Twitter posts to a Telegram target channel `TARGET_CHANNEL` (not chats, channel), and forwarding from those target channels to a list of target chats `TARGET_CHAT_IDS`.
 
-All messages posted by others in `TARGET_CHATS` will ALSO be forwarded to all `FORWARDING_IDS` chats.
+It also supports forwarding of all other posts (besides just tweets) in to the `TARGET_CHAT_IDS` chats. All posts from the channel ids added in the `REPOST_IDS` env variable will be forwarded to `TARGET_CHAT_IDS`. The `TARGET_CHANNEL` id also must be added to support forwarding of posts which were not reposted Twitter posts already sent by the bot
 
-If you would like for the bot to forward messages from a channel, but not send Twitter updates from that channel, add that channel to the `FORWARDING_ONLY` env variable of comma separated values.
+
 
 To set up your own Telegram bot, add it to a Telegram chat and get the chat_id. Add all necessary env variables in a .env file or otherwise. It gets all recent (the last 20) tweets and saves in local memory. 
 
@@ -43,19 +43,19 @@ WEBHOOK_URL
 *Your WebHook URL*
 
 ```
-TARGET_CHATS=chatid1,chatid2
+TARGET_CHAT_IDS=chatid1,chatid2
 ```
-A comma separated list of chats to send Twitter updates to. All messages posted in `TARGET_CHATS` will also be sent to all chats in `FORWARDING_IDS`, unless those `TARGET_CHATS` ids have been added to `FORWARDING_ONLY`. 
+*A comma separated list of chats to forward tweets and other messages to.*
 
 ```
-FORWARDING_IDS
+TARGET_CHANNEL
 ```
-*Chat ids to forward sent messages to*
+*The channel which tweets are sent to, and from which they are forwarded to TARGET_CHAT_IDS*
 
 ```
-FORWARDING_ONLY
+REPOST_IDS
 ```
-*Channel ids you want to forward messages from but not send Twitter updates to*
+*Channel ids which will have all messages forwarded to chats in `TARGET_CHAT_IDS`*
 
 # Usage:
 
