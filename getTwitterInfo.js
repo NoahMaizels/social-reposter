@@ -12,7 +12,8 @@ const client = new Twitter({
 });
  
 const buildTweetLink = (username, tweet_id) => {
-  return `https://twitter.com/${username}/status/${tweet_id}`
+  let tweet = `https://twitter.com/${username}/status/${tweet_id}`
+  return tweet.replace(/(\r\n|\n|\r)/gm,"")
 }
 
 const buildReTweetLink = (username, tweet_id) => {
